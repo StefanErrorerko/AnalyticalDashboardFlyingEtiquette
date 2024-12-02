@@ -1,9 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "flexmonster/flexmonster.css";
 
+@import "flexmonster/flexmonster.css";
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 * {
     font-family: 'Roboto', sans-serif;
     scroll-behavior: smooth;
@@ -11,71 +12,67 @@
     margin: 0;
 }
 
-
 :root {
-    --main-color: #fff;
+    --main-color: #131313;
     --second-color: #E9B824;
     --text-color: #0050C9;
-    --bg-color: #131313;
+    --bg-color: #ffffff;
     --big-font: 5rem;
     --h2-font: 2.5rem;
     --p-font: 1rem;
-
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
 }
 
 .block-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .block {
-  flex-basis: calc(16.666% - 20px); /* Six blocks in one row */
-  margin-right: 20px; /* Adjust spacing between blocks */
-  margin-bottom: 20px; /* Add margin to create space */
-  min-height: 100px; /* Set a minimum height for the blocks */
-  background-color: #f0f0f0; /* Add a background color for visualization */
-  border: 1px solid #ccc; /* Add a border for visualization */
+    flex-basis: calc(16.666% - 20px); /* Six blocks in one row */
+    margin-right: 20px; /* Adjust spacing between blocks */
+    margin-bottom: 20px; /* Add margin to create space */
+    min-height: 100px; /* Set a minimum height for the blocks */
+    background-color: #f0f0f0; /* Add a background color for visualization */
+    border: 1px solid #ccc; /* Add a border for visualization */
 }
 
 .empty-block {
-  background-color: transparent; /* Empty blocks have no background */
-  border: none; /* Empty blocks have no border */
+    background-color: transparent; /* Empty blocks have no background */
+    border: none; /* Empty blocks have no border */
 }
 
 .footer {
-  text-align: center;
-  padding: 10px;
+    text-align: center;
+    padding: 10px;
 }
 
 .chart-container {
-  display: flex;
-  justify-content: center; /* Center the chart horizontally */
-  align-items: center; /* Center the chart vertically */
-  height: 500px; /* Set the desired height for the chart container */
+    display: flex;
+    justify-content: center; /* Center the chart horizontally */
+    align-items: center; /* Center the chart vertically */
+    height: 500px; /* Set the desired height for the chart container */
 }
 
 #highcharts-container {
-  width: 100%; /* Set the width to 100% to fill the chart container */
-  height: 100%; /* Set the height to 100% to fill the chart container */
+    width: 100%; /* Set the width to 100% to fill the chart container */
+    height: 100%; /* Set the height to 100% to fill the chart container */
 }
 
-
-
-*::selection{
+*::selection {
     background-color: var(--main-color);
-    color: #fff
+    color: #ffffff;
 }
 
-body{
+body {
     color: var(--text-color);
     background: var(--bg-color);
     display: flex;
@@ -92,12 +89,9 @@ body{
 
 #container2 {
     display: flex;
-    
     width: auto;
     overflow-x: auto;
-    
 }
-
 
 #container3 {
     display: flex;
@@ -105,17 +99,17 @@ body{
     height: 500px;
     margin: 0 auto;
     width: 90%;
-    
 }
+
 #pivot {
     display: flex;
     justify-content: center;
 }
 
 #pivot-container {
-  border: 1px solid var(--main-color);
-  padding: 20px;
-  border-radius: 20px;
+    border: 1px solid var(--main-color);
+    padding: 20px;
+    border-radius: 20px;
 }
 
 h2 {
@@ -129,7 +123,6 @@ h2 {
 }
 
 h1 {
-
     font-size: 50px;
     font-style: normal;
     font-weight: 400;
@@ -138,43 +131,69 @@ h1 {
     text-transform: uppercase;
     padding-bottom: 30px;
     padding-top: 30px;
-    color: #ffffff;
+    color: #131313;
     text-align: center;
 }
 
 p {
     padding-top: 30px;
     font-size: 20px;
-    color: #ffffff;
+    color: #131313;
     text-align: center;
 }
 
 .chart {
-    padding: 30px 30px 30px 30px;
+    padding: 30px 30px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#chart-frequency-airline {
-  padding-top: 0;
+@media screen and (max-width: 768px) {
+    .group {
+        width: 100vw;
+        grid-template-columns: 100%;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 16px;
+    }
 }
 
-.wide-container {
-  padding-top: 0;
-  width: 50%;
-}
-
-.fm-theme-dark .fm-button {
-  background-color: #333 !important;
-  color: #fff !important;
-}
-
-.fm-theme-dark .fm-input {
-  background-color: #444 !important;
-  color: #fff !important;
-}
-
-.highcharts-legend-item {
-  fill: yellow; 
-}
-
-@import url('https://cdn.flexmonster.com/theme/dark/flexmonster.min.css');
-
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two charts per row */
+    gap: 20px; /* Space between charts */
+    margin-top: 20px;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .chart-item {
+    background-color: var(--bg-color); /* Match overall background */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart-item h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: var(--h2-font);
+    color: var(--main-color);
+  }
+  
+  .chart-item .chart {
+    height: 500px;
+  }
+  

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "restart": "next build && next start"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.4.7",
@@ -15,6 +16,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "axios": "^1.5.1",
+    "csv-parse": "^5.6.0",
     "csv-parser": "^3.0.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.5.2",
