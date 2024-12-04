@@ -20,8 +20,6 @@ export default function createRudeQuestionsAreaChart(
       },
     },
     (data: any) => {
-      console.log("Data from Flexmonster:", data);
-
       // Fetch and parse CSV data
       fetch(
         "https://raw.githubusercontent.com/fivethirtyeight/data/master/flying-etiquette-survey/flying-etiquette.csv"

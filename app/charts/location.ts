@@ -16,7 +16,6 @@ export default function createLocationChart(pivotRef: React.RefObject<Pivot>){
             },
         },
         (data: any) => {  
-          console.log("treba", data)
             // Define the chart configuration within the data object
             data.chart = {
                 type: 'pie',
