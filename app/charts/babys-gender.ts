@@ -2,34 +2,33 @@ import { Pivot } from "react-flexmonster";
 import * as Highcharts from "highcharts";
 import { parse } from "csv-parse/sync";
 
-export default function createBabyRudenessGenderPieChart(
-  pivotRef: React.RefObject<Pivot>
-) {
+export default function createBabyRudenessGenderPieChart(pivotRef: React.RefObject<Pivot>) {
+  const gridSlice = pivotRef.current!.flexmonster.getReport()?.slice as Flexmonster.Slice
+
   pivotRef.current?.flexmonster.highcharts?.getData(
     {
-      type: "pie", // Set chart type to 'pie'
+      type: "pie",
       slice: {
-        rows: [{ uniqueName: "Gender" }], // Rows represent gender
-        columns: [], // No need for columns in pie chart
+        rows: [{ uniqueName: "Gender" }],
+        columns: [], 
         measures: [
           {
-            uniqueName: "RespondentID", // Measure to count occurrences
-            aggregation: "count", // Aggregate by count
+            uniqueName: "RespondentID",
+            aggregation: "count", 
           },
         ],
+        reportFilters: gridSlice.reportFilters
       },
     },
     (data: any) => {
-      // Fetch and parse CSV data
       fetch(
         "https://raw.githubusercontent.com/fivethirtyeight/data/master/flying-etiquette-survey/flying-etiquette.csv"
       )
-        .then((response) => response.text()) // Get the CSV as text
+        .then((response) => response.text())
         .then((csvText) => {
-          // Parse the CSV using csv-parse
           const records = parse(csvText, {
-            columns: true, // Use the first row as column headers
-            skip_empty_lines: true, // Skip empty lines
+            columns: true,
+            skip_empty_lines: true,
           });
 
           // Filter data for "Yes, very rude" responses by gender
@@ -45,23 +44,21 @@ export default function createBabyRudenessGenderPieChart(
               row["Gender"] === "Female"
           ).length;
 
-          // Update data series for the pie chart
           data.chart = {
-            type: "pie", // Set chart type to pie
+            type: "pie",
           };
           data.legend = {
-            layout: 'horizontal', // Set legend layout to horizontal
-            align: 'center', // Center the legend horizontally
-            verticalAlign: 'bottom', // Position the legend at the bottom
+            layout: 'horizontal',
+            align: 'center', 
+            verticalAlign: 'bottom',
             x: 0,
-            y: 10, // Adjust the vertical position of the legend if needed
+            y: 10, 
           }
 
           data.title = {
             text: "Gender distribution of 'Yes, very rude' responses to question: 'Is it rude to bring unruly babies onboard?'",
           };
 
-          // Prepare pie chart data
           data.series = [
             {
               name: "Gender",
@@ -73,12 +70,10 @@ export default function createBabyRudenessGenderPieChart(
             },
           ];
 
-          // Tooltip configuration
           data.tooltip = {
             pointFormat: "<b>{point.percentage:.1f}%</b> ({point.y})",
           };
 
-          // Render the Highcharts pie chart
           Highcharts.chart("chart-baby-rudeness-gender", data);
         })
         .catch((error) => {

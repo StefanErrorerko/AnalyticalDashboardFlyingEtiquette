@@ -2,34 +2,34 @@ import { Pivot } from "react-flexmonster";
 import * as Highcharts from "highcharts";
 import { parse } from "csv-parse/sync";
 
-export default function createRudeQuestionsAreaChart(
-  pivotRef: React.RefObject<Pivot>
-) {
+export default function createRudeQuestionsAreaChart(pivotRef: React.RefObject<Pivot>) {
+  const gridSlice = pivotRef.current!.flexmonster.getReport()?.slice as Flexmonster.Slice
+
   pivotRef.current?.flexmonster.highcharts?.getData(
     {
-      type: "area", // Set chart type to 'area'
+      type: "area", 
       slice: {
-        rows: [{ uniqueName: "Age" }], // Rows represent age
-        columns: [], // Columns represent questions with 'rude'
+        rows: [{ uniqueName: "Age" }],
+        columns: [], 
         measures: [
           {
-            uniqueName: "RespondentID", // Measure to calculate percentages
-            aggregation: "count", // Aggregate by average to get % distribution
+            uniqueName: "RespondentID",
+            aggregation: "count", 
           },
         ],
+        reportFilters: gridSlice.reportFilters
       },
     },
     (data: any) => {
-      // Fetch and parse CSV data
       fetch(
         "https://raw.githubusercontent.com/fivethirtyeight/data/master/flying-etiquette-survey/flying-etiquette.csv"
       )
-        .then((response) => response.text()) // Get the CSV as text
+        .then((response) => response.text()) 
         .then((csvText) => {
           // Parse the CSV using csv-parse
           const records = parse(csvText, {
             columns: true, // Use the first row as column headers
-            skip_empty_lines: true, // Skip empty lines
+            skip_empty_lines: true, 
           });
 
           // Extract all questions containing the word "rude"
@@ -37,13 +37,12 @@ export default function createRudeQuestionsAreaChart(
             key.toLowerCase().includes("rude")
           );
 
-          // Prepare data for the area chart
-          let ageGroups: string[] = []; // Array to store unique age ranges
+          let ageGroups: string[] = [];
 
           records.forEach((row: any) => {
             const ageRange = row["Age"];
-            if (ageGroups && !ageGroups.includes(ageRange)) { // Ensure it's not already in the array
-              ageGroups.push(ageRange); // Add unique age range
+            if (ageGroups && !ageGroups.includes(ageRange)) {
+              ageGroups.push(ageRange); 
             }
           });
           ageGroups.filter((ageGroup) => ageGroup != "")
@@ -68,9 +67,8 @@ export default function createRudeQuestionsAreaChart(
             };
           });
 
-          // Define the chart configuration
           data.chart = {
-            type: "area", // Set chart type to area
+            type: "area",
           };
 
           data.title = {
@@ -78,36 +76,33 @@ export default function createRudeQuestionsAreaChart(
           };
 
           data.xAxis = {
-            categories: ageGroups, // Use age groups as x-axis categories
+            categories: ageGroups,
             title: {
-              text: "Age", // Title for x-axis
+              text: "Age",
             },
           };
 
           data.legend = {
-            layout: 'horizontal', // Set legend layout to horizontal
-            align: 'center', // Center the legend horizontally
-            verticalAlign: 'bottom', // Position the legend at the bottom
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom',
             x: 0,
-            y: 10, // Adjust the vertical position of the legend if needed
+            y: 10, 
           }
 
           data.yAxis = {
             title: {
-              text: "Percentage (%)", // Title for y-axis
+              text: "Percentage (%)", 
             },
           };
 
-          // Add data series for area chart
           data.series = seriesData;
 
-          // Tooltip configuration
           data.tooltip = {
-            shared: true, // Share tooltip between series
+            shared: true,
             valueSuffix: "%",
           };
 
-          // Render the Highcharts area chart
           Highcharts.chart("chart-rude-questions", data);
         })
         .catch((error) => {

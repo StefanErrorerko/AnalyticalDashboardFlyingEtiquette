@@ -1,7 +1,10 @@
 import { Pivot } from "react-flexmonster";
 import * as Highcharts from 'highcharts';
+import Flexmonster from "flexmonster";
 
 export default function createLocationChart(pivotRef: React.RefObject<Pivot>){
+    const gridSlice = pivotRef.current!.flexmonster.getReport()?.slice as Flexmonster.Slice
+
     pivotRef.current!.flexmonster.highcharts?.getData(
         {
             type: 'pie',
@@ -13,10 +16,11 @@ export default function createLocationChart(pivotRef: React.RefObject<Pivot>){
                         aggregation: 'count',
                     },
                 ],
+                reportFilters: gridSlice.reportFilters
             },
+            
         },
         (data: any) => {  
-            // Define the chart configuration within the data object
             data.chart = {
                 type: 'pie',
             };
@@ -25,11 +29,11 @@ export default function createLocationChart(pivotRef: React.RefObject<Pivot>){
             };
 
             data.legend = {
-                layout: 'horizontal', // Set legend layout to horizontal
-                align: 'center', // Center the legend horizontally
-                verticalAlign: 'bottom', // Position the legend at the bottom
+                layout: 'horizontal',
+                align: 'center', 
+                verticalAlign: 'bottom',
                 x: 0,
-                y: 10, // Adjust the vertical position of the legend if needed
+                y: 10, 
               }
             data.plotOptions = {
                 pie: {
@@ -40,7 +44,6 @@ export default function createLocationChart(pivotRef: React.RefObject<Pivot>){
                     },
                 },
             };  
-            // Pass data directly to Highcharts
             Highcharts.chart('chart-location-distribution', data);
         },
         (data: any) => {

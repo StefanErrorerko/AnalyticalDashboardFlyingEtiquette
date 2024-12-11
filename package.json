@@ -20,6 +20,7 @@
     "csv-parser": "^3.0.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.5.2",
+    "flexmonster": "2.9.92",
     "highcharts": "^11.1.0",
     "highcharts-react-official": "^3.2.1",
     "next": "13.5.2",

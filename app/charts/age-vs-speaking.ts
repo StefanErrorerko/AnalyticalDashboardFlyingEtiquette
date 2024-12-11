@@ -2,17 +2,19 @@ import { Pivot } from "react-flexmonster";
 import * as Highcharts from 'highcharts';
 
 export default function createAgeVsSpeakingChart(pivotRef: React.RefObject<Pivot>){
+  const gridSlice = pivotRef.current!.flexmonster.getReport()?.slice as Flexmonster.Slice
+
     pivotRef.current!.flexmonster.highcharts?.getData(
         {
           type: 'line',
           slice: {
             rows: [{ uniqueName: 'Age' }],
             columns: [{ uniqueName: 'Generally speaking, is it rude to say more than a few words tothe stranger sitting next to you on a plane?' }], 
-            measures: [{ uniqueName: 'RespondentID', aggregation: 'count' }],  // Counting the number of respondents
+            measures: [{ uniqueName: 'RespondentID', aggregation: 'count' }], 
+            reportFilters: gridSlice.reportFilters
           },
         },
         (data: any) => {
-          // Preprocess the data (if necessary) and calculate the trend
           const totalByAgeGroup: Record<string, number> = {};
       
           // Calculate totals per age group
@@ -24,43 +26,36 @@ export default function createAgeVsSpeakingChart(pivotRef: React.RefObject<Pivot
             });
           });
       
-          // Optional: Normalize the data to percentage or other calculations
           data.series.forEach((series: any) => {
             series.data = series.data.map((value: number, index: number) => {
               const category = data.xAxis.categories[index];
-              return (value / totalByAgeGroup[category]) * 100;  // Convert to percentage
+              return (value / totalByAgeGroup[category]) * 100;  
             });
           });
 
-          // Custom order for categories (age groups)
       const customOrder = ['18-29', '30-44', '45-60', '> 60'];
 
-      // Store the original order of categories
       let originalCategories = [...data.xAxis.categories];
       originalCategories = originalCategories.filter((category: any) => category !== '(blank)');
       data.xAxis.categories = originalCategories
 
-      // Sort categories based on custom order
       const sortedCategories = data.xAxis.categories.sort((a: any, b: any) => {
         return customOrder.indexOf(a) - customOrder.indexOf(b);
       });
 
       data.series = data.series.filter((series: any) => series.name !== "(blank)");
 
-      // Map each series.data to the new sorted order
       data.series.forEach((series: any) => {
         const sortedData: number[] = []
         sortedCategories.forEach((category: any) => {
             let index: number = originalCategories.indexOf(category)
             sortedData.push(series.data[index])
         })
-        series.data = sortedData; // Update the series data with the sorted data
+        series.data = sortedData; 
       });
 
-      // Filter out blank answers if necessary
       data.xAxis.categories = sortedCategories.filter((category: any) => category !== '(blank)');
       
-          // Configure chart options
           data.chart = {
             type: 'line',
           };
@@ -70,7 +65,7 @@ export default function createAgeVsSpeakingChart(pivotRef: React.RefObject<Pivot
           };
       
           data.xAxis = {
-            categories: data.xAxis.categories,  // Categories represent the age groups
+            categories: data.xAxis.categories,  
             title: {
               text: 'Age Group',
             },
@@ -78,12 +73,12 @@ export default function createAgeVsSpeakingChart(pivotRef: React.RefObject<Pivot
       
           data.yAxis = {
             min: 0,
-            max: 100,  // Range for percentage data
+            max: 100,  
             title: {
               text: 'Percentage of Respondents',
             },
             labels: {
-              format: '{value}%',  // Format labels as percentages
+              format: '{value}%',
             },
           };
       
@@ -104,14 +99,13 @@ export default function createAgeVsSpeakingChart(pivotRef: React.RefObject<Pivot
             pointFormat: '{series.name}: {point.y:.1f}%<br/>',
           };
           data.legend = {
-            layout: 'horizontal', // Set legend layout to horizontal
-            align: 'center', // Center the legend horizontally
-            verticalAlign: 'bottom', // Position the legend at the bottom
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom',
             x: 0,
-            y: 10, // Adjust the vertical position of the legend if needed
+            y: 10, 
           }
       
-          // Render the chart
           Highcharts.chart('chart-age-vs-speaking', data);
         }
       );

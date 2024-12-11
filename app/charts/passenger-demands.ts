@@ -2,6 +2,8 @@ import { Pivot } from "react-flexmonster";
 import * as Highcharts from 'highcharts';
 
 export default function createPassengersDemandChart(pivotRef: React.RefObject<Pivot>){
+  const gridSlice = pivotRef.current!.flexmonster.getReport()?.slice as Flexmonster.Slice
+
     pivotRef.current!.flexmonster.highcharts?.getData(
         {
           type: 'column',
@@ -9,13 +11,12 @@ export default function createPassengersDemandChart(pivotRef: React.RefObject<Pi
             rows: [{ uniqueName: 'Is itrude to recline your seat on a plane?' }],
             columns: [{ uniqueName: 'Do you ever recline your seat when you fly?' }],
             measures: [{ uniqueName: 'RespondentID', aggregation: 'count' }],
+            reportFilters: gridSlice.reportFilters
           },
         },
         (data: any) => {
-          // Preprocess the data for percentage calculation
           const totalByCategory: Record<string, number> = {};
-      
-          // Calculate totals per category (X-axis)
+
           data.series.forEach((series: any) => {
             series.data.forEach((value: number, index: number) => {
               const category = data.xAxis.categories[index];
@@ -24,7 +25,6 @@ export default function createPassengersDemandChart(pivotRef: React.RefObject<Pi
             });
           });
       
-          // Convert data values to percentages
           data.series.forEach((series: any) => {
             series.data = series.data.map((value: number, index: number) => {
               const category = data.xAxis.categories[index];
@@ -32,7 +32,6 @@ export default function createPassengersDemandChart(pivotRef: React.RefObject<Pi
             });
           });
       
-          // Filter out blank categories
           const filteredCategories: any[] = [];
           data.series.forEach((series: any) => {
             series.data = series.data.filter((point: any, index: number) => {
@@ -45,13 +44,11 @@ export default function createPassengersDemandChart(pivotRef: React.RefObject<Pi
           });
           data.xAxis.categories = filteredCategories;
       
-          // Sort stacks based on custom order
           const customOrder = ['Never', 'Once in a while', 'About half the time', 'Usually', 'Always'];
           data.series.sort((a: any, b: any) => {
             return customOrder.indexOf(a.name) - customOrder.indexOf(b.name);
           });
       
-          // Configure chart options for percentage stacking
           data.chart = {
             type: 'column',
           };
@@ -100,14 +97,13 @@ export default function createPassengersDemandChart(pivotRef: React.RefObject<Pi
           };
 
           data.legend = {
-            layout: 'horizontal', // Set legend layout to horizontal
-            align: 'center', // Center the legend horizontally
-            verticalAlign: 'bottom', // Position the legend at the bottom
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom',
             x: 0,
-            y: 10, // Adjust the vertical position of the legend if needed
+            y: 10,
           }
       
-          // Render the chart
           Highcharts.chart('chart-seat-recline-vs-obligation', data);
         }
       );

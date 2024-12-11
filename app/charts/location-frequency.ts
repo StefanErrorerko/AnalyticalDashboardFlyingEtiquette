@@ -2,13 +2,16 @@ import { Pivot } from "react-flexmonster";
 import * as Highcharts from 'highcharts';
 
 export default function createLocationFrequencyChart(pivotRef: React.RefObject<Pivot>){
+    const gridSlice = pivotRef.current!.flexmonster.getReport()?.slice as Flexmonster.Slice
+
     pivotRef.current!.flexmonster.highcharts?.getData(
         {
             type: 'column',
             slice: {
                 rows: [{ uniqueName: 'Location (Census Region)' }], 
                 columns: [{ uniqueName: 'How often do you travel by plane?' }],
-                measures: [{ uniqueName: 'RespondentID', aggregation: 'count' }] 
+                measures: [{ uniqueName: 'RespondentID', aggregation: 'count' }],
+                reportFilters: gridSlice.reportFilters
             }
         },
         (data: any) => {
@@ -17,10 +20,8 @@ export default function createLocationFrequencyChart(pivotRef: React.RefObject<P
                 return seriesItem.name !== "" && seriesItem.name !== "(blank)";
             });
   
-            // Update the series with the filtered data
             data.series = filteredSeries;
   
-            // Chart configuration
             data.chart = {
                 type: 'column',
             };
@@ -71,11 +72,11 @@ export default function createLocationFrequencyChart(pivotRef: React.RefObject<P
             };
 
             data.legend = {
-                layout: 'horizontal', // Set legend layout to horizontal
-                align: 'center', // Center the legend horizontally
-                verticalAlign: 'bottom', // Position the legend at the bottom
+                layout: 'horizontal',
+                align: 'center', 
+                verticalAlign: 'bottom',
                 x: 0,
-                y: 10, // Adjust the vertical position of the legend if needed
+                y: 10,
               }
   
             Highcharts.chart('chart-location-to-frequency', data);

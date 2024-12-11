@@ -2,6 +2,8 @@ import { Pivot } from "react-flexmonster";
 import * as Highcharts from 'highcharts';
 
 export default function createTravelFrequencyViolationChart(pivotRef: React.RefObject<Pivot>){
+  const gridSlice = pivotRef.current!.flexmonster.getReport()?.slice as Flexmonster.Slice
+
     pivotRef.current!.flexmonster.highcharts?.getData(
         {
           type: 'bar',
@@ -9,13 +11,12 @@ export default function createTravelFrequencyViolationChart(pivotRef: React.RefO
             rows: [{ uniqueName: 'How often do you travel by plane?' }],
             columns: [{ uniqueName: "Have you ever used personal electronics during take off or landing in violation of a flight attendant's direction?" }],
             measures: [{ uniqueName: 'RespondentID', aggregation: 'count' }],
+            reportFilters: gridSlice.reportFilters
           },
         },
         (data: any) => {
-          // Preprocess the data for percentage calculation
           const totalByCategory: Record<string, number> = {};
       
-          // Calculate totals per category (X-axis)
           data.series.forEach((series: any) => {
             series.data.forEach((value: number, index: number) => {
               const category = data.xAxis.categories[index];
@@ -24,7 +25,6 @@ export default function createTravelFrequencyViolationChart(pivotRef: React.RefO
             });
           });
       
-          // Convert data values to percentages
           data.series.forEach((series: any) => {
             series.data = series.data.map((value: number, index: number) => {
               const category = data.xAxis.categories[index];
@@ -32,7 +32,6 @@ export default function createTravelFrequencyViolationChart(pivotRef: React.RefO
             });
           });
       
-          // Configure chart options for percentage stacking
           data.chart = {
             type: 'bar',
           };
@@ -68,11 +67,11 @@ export default function createTravelFrequencyViolationChart(pivotRef: React.RefO
           };
 
           data.legend = {
-            layout: 'horizontal', // Set legend layout to horizontal
-            align: 'center', // Center the legend horizontally
-            verticalAlign: 'bottom', // Position the legend at the bottom
+            layout: 'horizontal', 
+            align: 'center', 
+            verticalAlign: 'bottom',
             x: 0,
-            y: 10, // Adjust the vertical position of the legend if needed
+            y: 10, 
           }
           data.tooltip = {
             headerFormat: '<b>{point.x}</b><br/>',
@@ -92,14 +91,13 @@ export default function createTravelFrequencyViolationChart(pivotRef: React.RefO
                   style: {
                     fontSize: '12px',
                     fontWeight: 'bold',
-                    color: '#000', // Set color for data labels
+                    color: '#000',
                   },
-                  borderWidth: 0, // Remove the border around the numbers
+                  borderWidth: 0,
                 },
               },
           };
       
-          // Render the chart
           Highcharts.chart('chart-travel-frequency-violations', data);
         }
       );

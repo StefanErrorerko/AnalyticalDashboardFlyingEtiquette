@@ -24,15 +24,12 @@ const ForwardRefPivot = React.forwardRef<Pivot, Flexmonster.Params>((props, ref?
 
 ForwardRefPivot.displayName = 'ForwardRefPivot'; 
 
-
-// building a page
 export default function WithHighcharts() {
 
     const pivotRef: React.RefObject<Pivot> = React.useRef<Pivot>(null);
 
     const reportComplete = () => {
         pivotRef.current!.flexmonster.off("reportComplete", reportComplete);
-        //creating charts after Flexmonster instance is launched
         createChart();
     }
 
@@ -49,7 +46,7 @@ export default function WithHighcharts() {
     }
 
     pivotRef.current!.flexmonster.on('dataChanged', updateCharts);
-    pivotRef.current!.flexmonster.on('filterChange', updateCharts);
+    pivotRef.current!.flexmonster.on('filterclose', updateCharts);
 
     updateCharts();
   };
@@ -61,13 +58,12 @@ export default function WithHighcharts() {
 
         // Trigger the chart update when data changes
         pivot.on('dataChanged', createChart);
-        pivot.on('filterChange', createChart);
-
+        pivot.on('filterclose', createChart);
 
         return () => {
           pivot.off('dataChanged', createChart);
-          pivot.off('filterChange', createChart);
-        } // Clean up the event listener
+          pivot.off('filterclose', createChart);
+        }
     }
 }, [pivotRef]);
 
@@ -100,9 +96,8 @@ export default function WithHighcharts() {
                     type: "csv", 
                     // path to the dataset
                     filename: "https://raw.githubusercontent.com/fivethirtyeight/data/master/flying-etiquette-survey/flying-etiquette.csv" 
-                  } 
+                  },
                 }}
-                // ???
                 licenseFilePath="https://cdn.flexmonster.com/jsfiddle.charts.key"
                 reportcomplete={reportComplete}
                 // insert your licenseKey below
