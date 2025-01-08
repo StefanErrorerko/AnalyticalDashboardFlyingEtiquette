@@ -1,4 +1,4 @@
-![Dashboard Overview](https://drive.google.com/file/d/1ewwxsQHOA-owoGZl9mJWszqFPZVOq6Zk/view?usp=sharing)
+![Dashboard Overview](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
