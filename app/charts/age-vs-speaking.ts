@@ -61,7 +61,7 @@ export default function createAgeVsSpeakingChart(pivotRef: React.RefObject<Pivot
           };
       
           data.title = {
-            text: 'How the likelihood of speaking with strangers varies across different age groups',
+            text: 'What is the likelihood of speaking with strangers varies across different age groups',
           };
       
           data.xAxis = {

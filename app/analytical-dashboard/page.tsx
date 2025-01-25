@@ -2,6 +2,7 @@
 import * as React from "react";
 import type { Pivot } from "react-flexmonster";
 import dynamic from "next/dynamic";
+
 import createTravelFrequencyViolationChart from "../charts/travel-frequency-violations";
 import createAgeVsSpeakingChart from "../charts/age-vs-speaking";
 import createBabyRudenessByGenderChart from "../charts/babys-gender";
